@@ -10,7 +10,9 @@ class TasksTable extends React.Component{
             <div className='tasksTable'>
                 <EditRow    newTask={this.props.addRow}
                             deleteTask={this.props.deleteTask}
-                            inputBox={this.props.inputBox}/>
+                            inputBox={this.props.inputBox}
+                            changeTask={this.props.changeTask}
+                            placeholder={this.props.placeholder}/>
                 <ContentRows sortFunc={this.props.sortFunc}/>
             </div>
         )

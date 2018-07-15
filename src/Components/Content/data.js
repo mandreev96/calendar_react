@@ -1,11 +1,13 @@
+import moment from 'moment'
 
-const DataCalendar = [{
-    day: 14,
+
+var DataCalendar = [{
+    day: moment().format('DD'),
     month: 6,
     year: 2018,
-    id: 0,
-    taskText: 'Text',
-    time: 'time'
+    id: 'test',
+    taskText: 'Test',
+    time: 'timeTest'
 }]
 
 

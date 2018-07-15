@@ -1,7 +1,6 @@
 import React from 'react'
 import 'font-awesome/css/font-awesome.min.css'
 import './styles.css'
-import moment from 'moment'
 
 class BasicRow extends React.Component{
     constructor(props) {
@@ -10,9 +9,9 @@ class BasicRow extends React.Component{
 
     render() {
         return(
-            <div className='basicRow' onClick={this.props.clickOnRow}>
+            <div className='basicRow' onClick={this.props.clickOnRow} id={`taskNum-${this.props.idBasicRow}`}>
                 {this.props.taskText}
-                <span>{this.props.selDay}/{this.props.selMonth}</span>
+                <span>{this.props.time}</span>
             </div>
         )
     }

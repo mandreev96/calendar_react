@@ -20,7 +20,8 @@ class Content extends React.Component{
             valueText: '',
             choiceDay: this.nowDay,
             choiceMonth: this.nowMonth,
-            choiceYear: this.nowYear
+            choiceYear: this.nowYear,
+            placeholder: 'Insert your task...'
         }
 
         // TableTask functions
@@ -34,27 +35,35 @@ class Content extends React.Component{
         this.clickNextYear = clickNextYear.bind(this)
         this.cellClick = cellClick.bind(this)
         this.inputBox = inputBox.bind(this)
+        this.sort = sort.bind(this)
+        this.clearTableTasks = clearTableTasks.bind(this)
+        this.changeTask = changeTask.bind(this)
+        //this.changePH = changePH.bind(this)
     }
 
 
     viewRow(nameMonth, nameYear) {
-        this.startMonth = parseInt(new moment().year(nameYear).month(nameMonth).day(1).format('DD'));
+        this.startMonth = parseInt(new moment().year(nameYear).month(nameMonth).day(1).format('DD'))-7;
         this.endMonth = parseInt(new moment().year(nameYear).month(nameMonth).endOf('month').format('DD'));
         this.rowWeek = [];
-        this.sortFirstWeek = parseInt(new moment().year(nameYear).month(nameMonth).day(1).format('DD'));
+        this.sortFirstWeek = parseInt(new moment().year(nameYear).month(nameMonth).day(1).format('DD'))-7;
 
 
         this.rowWeek[0] = []                        // Составляем первую неделю
-        this.sortFirstWeek = (this.sortFirstWeek == 7) ? 7 : (this.sortFirstWeek - 7)
-        this.startMonth = (this.startMonth == 7) ? 7 : (this.startMonth - 7)
-        for (let k=0; k<7; k++){
-
-            if (this.sortFirstWeek > 1) {
-                this.sortFirstWeek -= 1
-                this.rowWeek[0].unshift(this.sortFirstWeek)
+        if (this.sortFirstWeek == 9) {
+            this.rowWeek[0] = [1]
+            this.sortFirstWeek -= 7
+            this.startMonth -= 7
+        } else {
+            for (let k=0; k<7; k++){
+                if (this.sortFirstWeek > 1) {
+                    this.sortFirstWeek -= 1
+                    this.rowWeek[0].unshift(this.sortFirstWeek)
+                }
             }
-
         }
+        console.log(this.sortFirstWeek)
+
 
         for (let j=1; j<5; j++) {                         //Составляем середину
             this.rowWeek[j] = [];
@@ -99,6 +108,8 @@ class Content extends React.Component{
                             inputText={this.state.valueText}
                             nameDay={this.state.month}
                             sortFunc={this.state.viewRows}
+                            changeTask={this.changeTask}
+                            placeholder={this.state.placeholder}
                 />
             </div>
         )
@@ -142,12 +153,7 @@ function clearCreateRow() {
 
 // Sorting and building tabletasks
 
-var createRow = [{
-    day: 10,
-    month: 6,
-    year: 2018,
-    taskText: 'rabotay syka'
-}]
+var createRow = []
 
 
 
@@ -214,37 +220,32 @@ function clickBackYear() {
 
 // Operations with tasktable and rows
 
-var memoryRow = []
 var memoryClickRow = 0;
 var inputValue = '';
 
 function addRow() {
     if ((this.state.valueText != '')&&(currentDate != 0)) {
-        memoryRow.push(<BasicRow clickOnRow={this.clickOnRow}
-                                 selDay={this.state.choiceDay}
-                                 selMonth={this.state.choiceMonth}
-                                 taskText={this.state.valueText}/>)
-        this.setState({
-          //  choiceDay: currentDate.selDay,
-          //  choiceMonth: currentDate.selMonth,
-          //  choiceYear: currentDate.selYear,
-            viewRows: memoryRow
-        })
         clearInputBox()
         DataCalendar.push({
             day: this.state.choiceDay,
             month: this.state.choiceMonth,
             year: this.state.choiceYear,
             id: nowId,
-            taskText: this.state.valueText
+            taskText: this.state.valueText,
+            time: moment().format('LT')
         })
         nowId += 1
     }
     console.log(currentDate)
+    this.sort()
 }
 
+var idSelRow,
+    selRow
+
 function clickOnRow(event) {
-    let selRow = event.currentTarget
+    selRow = event.currentTarget
+    idSelRow = selRow.id
     if (memoryClickRow == selRow) {
         memoryClickRow = 0
     }
@@ -258,15 +259,47 @@ function clickOnRow(event) {
         selRow.removeAttribute('style')
         memoryClickRow = selRow
     }
+    changePH()
+    this.setState({
+        placeholder: placeHold
+    })
+
 }
+
 
 function deleteTask() {
     if (memoryClickRow !== 0) {
         if   (memoryClickRow.getAttribute('style') === 'background-color: purple'){
-            memoryClickRow.remove()
+            for (let i=0; i<DataCalendar.length; i++) {
+                if ((`taskNum-${DataCalendar[i].id}`) == idSelRow){
+                    DataCalendar.splice(i,1)
+                }
+            }
+            this.sort()
         }
     }
     clearInputBox()
+}
+
+
+
+
+function changeTask() {
+    console.log(idSelRow)
+    console.log(this.state.valueText)
+    for (let i=0; i<DataCalendar.length; i++) {
+        if (`taskNum-${DataCalendar[i].id}`==idSelRow) {
+            DataCalendar[i].taskText = this.state.valueText
+        }
+    }
+    this.sort()
+    clearInputBox()
+}
+
+function clearTableTasks() {
+    this.setState({
+        viewRows: ''
+    })
 }
 
 function inputBox(event) {
@@ -277,8 +310,8 @@ function inputBox(event) {
 }
 
 function clearInputBox() {
-    if (inputValue.value != '') {
-        inputValue.value = ''
+    if (inputValue.value != "") {
+        inputValue.value = ""
     }
 }
 
@@ -305,21 +338,35 @@ function cellClick(event) {
     } else {
         thisCell.removeAttribute('style')
         clearCurrentDate()
+        this.clearTableTasks()
     }
     memoryCell = thisCell
+    this.sort()
 
+}
+
+function sort() {
     if (currentDate != undefined) {
         clearCreateRow()
         for (let i=0; i<DataCalendar.length; i++) {
             if ((currentDate.selDay == DataCalendar[i].day)&&(currentDate.selMonth == DataCalendar[i].month)&&((currentDate.selYear) == DataCalendar[i].year)){
                 createRow.push(<BasicRow taskText={DataCalendar[i].taskText}
-                                         clickOnRow={this.clickOnRow}/>)
+                                         clickOnRow={this.clickOnRow}
+                                         time={DataCalendar[i].time}
+                                         idBasicRow={DataCalendar[i].id}/>)
             }
         }
         this.setState({
             viewRows: createRow
         })
     }
+}
+
+var placeHold = 'Insert your task...'
+
+function changePH() {
+    placeHold = (placeHold == 'Insert your task...') ?  ('Change your task...') : ('Insert your task...')
+    console.log(placeHold)
 }
 
 
