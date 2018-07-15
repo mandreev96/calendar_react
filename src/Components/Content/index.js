@@ -62,7 +62,6 @@ class Content extends React.Component{
                 }
             }
         }
-        console.log(this.sortFirstWeek)
 
 
         for (let j=1; j<5; j++) {                         //Составляем середину
@@ -236,7 +235,6 @@ function addRow() {
         })
         nowId += 1
     }
-    console.log(currentDate)
     this.sort()
 }
 
@@ -285,8 +283,6 @@ function deleteTask() {
 
 
 function changeTask() {
-    console.log(idSelRow)
-    console.log(this.state.valueText)
     for (let i=0; i<DataCalendar.length; i++) {
         if (`taskNum-${DataCalendar[i].id}`==idSelRow) {
             DataCalendar[i].taskText = this.state.valueText
@@ -366,7 +362,6 @@ var placeHold = 'Insert your task...'
 
 function changePH() {
     placeHold = (placeHold == 'Insert your task...') ?  ('Change your task...') : ('Insert your task...')
-    console.log(placeHold)
 }
 
 

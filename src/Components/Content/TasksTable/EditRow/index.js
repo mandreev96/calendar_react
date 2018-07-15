@@ -1,5 +1,4 @@
 import React from 'react'
-import 'font-awesome/css/font-awesome.min.css'
 import './styles.css'
 
 class EditRow extends React.Component{
