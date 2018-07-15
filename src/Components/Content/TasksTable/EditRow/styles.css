@@ -1,0 +1,36 @@
+.editRow {
+    height: 50px;
+    width: 100%;
+    border-bottom: 1px solid black;
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 34px;
+}
+
+.editRow-add {
+
+}
+
+.editRow-del {
+    margin-left: 10px;
+}
+
+.editRow-edit {
+    margin-left: 10px;
+}
+
+.editRow input {
+    width: 183px;
+    margin-left: 10px;
+    height: 32px;
+    outline: none;
+    padding: 0 8px;
+    font-size: 20px;
+    font-family: "Lato Medium";
+}
+
+i {
+    cursor: pointer;
+}

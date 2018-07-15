@@ -1,0 +1,16 @@
+.calendar {
+    display: flex;
+    flex-direction: column;
+    height: 300px;
+}
+
+.calendarBox {
+    display: flex;
+    flex-direction: column;
+}
+
+.knop {
+    width: 100px;
+    height: 100px;
+    background-color: cornflowerblue;
+}

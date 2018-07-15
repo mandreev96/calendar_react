@@ -1,0 +1,7 @@
+.row {
+    display: flex;
+}
+
+.row:first-child {
+    align-self: flex-end;
+}

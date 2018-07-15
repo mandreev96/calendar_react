@@ -1,0 +1,15 @@
+.basicRow {
+
+    width: 100%;
+    border-bottom: 1px solid black;
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 24px;
+    background-color: #806580;
+}
+
+.basicRow span {
+    font-size: 14px;
+}
