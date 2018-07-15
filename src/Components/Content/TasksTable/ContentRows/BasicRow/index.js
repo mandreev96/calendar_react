@@ -11,10 +11,8 @@ class BasicRow extends React.Component{
     render() {
         return(
             <div className='basicRow' onClick={this.props.clickOnRow}>
-                {this.props.inputText}
-                <span>{this.props.nameDay}</span>
-                <span>{moment().format('LT')}</span>
-                <span>{this.props.showDay}/{this.props.showMonth+1}/{this.props.showYear}</span>
+                {this.props.taskText}
+                <span>{this.props.selDay}/{this.props.selMonth}</span>
             </div>
         )
     }

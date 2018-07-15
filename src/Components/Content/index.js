@@ -33,9 +33,7 @@ class Content extends React.Component{
         this.clickBackYear = clickBackYear.bind(this)
         this.clickNextYear = clickNextYear.bind(this)
         this.cellClick = cellClick.bind(this)
-        this.testAddTask = testAddTask.bind(this)
         this.inputBox = inputBox.bind(this)
-        this.dropRows = dropRows.bind(this)
     }
 
 
@@ -82,24 +80,9 @@ class Content extends React.Component{
 
         return (this.rowWeek)
     }
-    sort(sortDay, sortMonth, sortYear) {
-        memoryRow = []
-        for (let i=0; i<DataCalendar.length; i++) {
-            if ((sortDay == DataCalendar[i].day)&&(sortMonth == DataCalendar[i].month)&&(sortYear == DataCalendar[i].year)){
-                memoryRow.push(DataCalendar[i])
-                //this.setState({
-                //    viewRows: memoryRow
-                //})
-                return this.state.viewRows
-                console.log(memoryRow)
-            }
-        }
-        console.log(false)
-    }
 
     render(){
         this.viewRow(this.state.month, this.state.year)
-        this.sort(this.state.choiceDay, this.state.choiceMonth, this.state.choiceYear)
         return(
             <div className='content'>
                 <Calendar   clickBackYear={this.clickBackYear}
@@ -109,10 +92,8 @@ class Content extends React.Component{
                             cellClick={this.cellClick}
                             rowWeek = {this.rowWeek}
                             month = {this.state.month}
-                            year = {this.state.year}
-                            testAddTask = {this.testAddTask}/>
-                <TasksTable viewRows={this.state.viewRows}
-                            addRow={this.addRow}
+                            year = {this.state.year}/>
+                <TasksTable addRow={this.addRow}
                             deleteTask={this.deleteTask}
                             inputBox={this.inputBox}
                             inputText={this.state.valueText}
@@ -125,83 +106,53 @@ class Content extends React.Component{
 
 }
 
-//TaskTable functions and variables
+// Variables
+var memoryCell = 0    // Memory click on cell
+var currentDate = 0,  // Current Date
+    nowId = 0
 
-var memoryRow;
-
-var memoryClickRow = 0;
-var inputValue = '';
-
-function addRow() {
-    if ((this.state.valueText != '')&&(currentDate != 0)) {
-        memoryRow = []
-        memoryRow.push(<BasicRow clickOnRow={this.clickOnRow}
-                                 inputText={this.state.valueText}
-                                 nameDay={this.state.valueText}
-                                 showDay={currentDate.selDay}
-                                 showMonth={this.state.month}
-                                 showYear={this.state.year}/>)
-        this.setState({
-            viewRows: memoryRow
-        })
-        clearInputBox()
-        DataCalendar.push({
-            day: this.state.choiceDay,
-            month: this.state.choiceMonth,
-            year: this.state.choiceYear,
-            id: nowId,
-            taskText: this.state.valueText
-        })
-        this.setState({
-            valueText: ''
-        })
-        nowId += 1
+function currentCell(day, month, year) {            // Select current date after click on cell
+    currentDate = {
+        selDay: day,
+        selMonth: month,
+        selYear: year,
+        id: nowId
     }
 }
 
 
 
-function clickOnRow(event) {
-    let selRow = event.currentTarget
-    if (memoryClickRow == selRow) {
-        memoryClickRow = 0
-    }
-    if (selRow.getAttribute('style') !== 'background-color: purple') {
-        selRow.setAttribute('style','background-color: purple')
-        if (memoryClickRow != 0) {
-            memoryClickRow.removeAttribute('style')
-        }
-        memoryClickRow = selRow
-    } else {
-        selRow.removeAttribute('style')
-        memoryClickRow = selRow
-    }
-}
+//Cleaning
 
-function deleteTask() {
-    if (memoryClickRow !== 0) {
-        if   (memoryClickRow.getAttribute('style') === 'background-color: purple'){
-            memoryClickRow.remove()
+function clearPointCell() {
+    if (memoryCell != 0) {
+        if (memoryCell.getAttribute('style') != '') {
+            memoryCell.removeAttribute('style')
         }
     }
-    clearInputBox()
 }
 
-function inputBox(event) {
-    inputValue = event.target
-    this.setState({
-        valueText: inputValue.value
-    })
+function clearCurrentDate() {
+    currentDate = undefined
 }
 
-function clearInputBox() {
-    if (inputValue.value != '') {
-        inputValue.value = ''
-    }
+function clearCreateRow() {
+    createRow = []
 }
+
+// Sorting and building tabletasks
+
+var createRow = [{
+    day: 10,
+    month: 6,
+    year: 2018,
+    taskText: 'rabotay syka'
+}]
+
 
 
 // CalendarBox functions and variables
+// Changing months and year
 
 function clickBackMonth() {
     let nowMonth = this.state.month
@@ -254,21 +205,84 @@ function clickBackYear() {
     clearCurrentDate()
 }
 
-const dataFile = []
-var currentDate = 0,
-    nowId = 0
 
-function currentCell(day, month, year) {
-    currentDate = {
-        selDay: day,
-        selMonth: month,
-        selYear: year,
-        id: nowId
+
+
+
+
+//TaskTable functions and variables
+
+// Operations with tasktable and rows
+
+var memoryRow = []
+var memoryClickRow = 0;
+var inputValue = '';
+
+function addRow() {
+    if ((this.state.valueText != '')&&(currentDate != 0)) {
+        memoryRow.push(<BasicRow clickOnRow={this.clickOnRow}
+                                 selDay={this.state.choiceDay}
+                                 selMonth={this.state.choiceMonth}
+                                 taskText={this.state.valueText}/>)
+        this.setState({
+          //  choiceDay: currentDate.selDay,
+          //  choiceMonth: currentDate.selMonth,
+          //  choiceYear: currentDate.selYear,
+            viewRows: memoryRow
+        })
+        clearInputBox()
+        DataCalendar.push({
+            day: this.state.choiceDay,
+            month: this.state.choiceMonth,
+            year: this.state.choiceYear,
+            id: nowId,
+            taskText: this.state.valueText
+        })
+        nowId += 1
     }
-
+    console.log(currentDate)
 }
 
-var memoryCell = 0
+function clickOnRow(event) {
+    let selRow = event.currentTarget
+    if (memoryClickRow == selRow) {
+        memoryClickRow = 0
+    }
+    if (selRow.getAttribute('style') !== 'background-color: purple') {
+        selRow.setAttribute('style','background-color: purple')
+        if (memoryClickRow != 0) {
+            memoryClickRow.removeAttribute('style')
+        }
+        memoryClickRow = selRow
+    } else {
+        selRow.removeAttribute('style')
+        memoryClickRow = selRow
+    }
+}
+
+function deleteTask() {
+    if (memoryClickRow !== 0) {
+        if   (memoryClickRow.getAttribute('style') === 'background-color: purple'){
+            memoryClickRow.remove()
+        }
+    }
+    clearInputBox()
+}
+
+function inputBox(event) {
+    inputValue = event.target
+    this.setState({
+        valueText: inputValue.value
+    })
+}
+
+function clearInputBox() {
+    if (inputValue.value != '') {
+        inputValue.value = ''
+    }
+}
+
+
 function cellClick(event) {
     let thisCell = event.currentTarget
     if (thisCell == memoryCell) {
@@ -278,6 +292,11 @@ function cellClick(event) {
     let selMonth = this.state.month
     let selYear = this.state.year
     currentCell(selDay, selMonth, selYear)
+    this.setState({
+        choiceDay: selDay,
+        choiceMonth: selMonth,
+        choiceYear: selYear
+    })
     if (thisCell.getAttribute('style') !== 'background-color: hotpink') {
         thisCell.setAttribute('style','background-color: hotpink')
         if ((memoryCell != 0)) {
@@ -288,52 +307,20 @@ function cellClick(event) {
         clearCurrentDate()
     }
     memoryCell = thisCell
-        if (currentDate != undefined) {
-            this.setState({
-                choiceDay: currentDate.selDay,
-                choiceMonth: currentDate.selMonth,
-                choiceYear: currentDate.selYear
-            })
-        } else {
-            this.setState({
-                choiceDay: this.nowDay,
-                choiceMonth: this.nowMonth,
-                choiceYear: this.nowYear
-            })
-        }
-   this.dropRows()
-}
 
-function clearPointCell() {
-    if (memoryCell != 0) {
-        if (memoryCell.getAttribute('style') != '') {
-            memoryCell.removeAttribute('style')
+    if (currentDate != undefined) {
+        clearCreateRow()
+        for (let i=0; i<DataCalendar.length; i++) {
+            if ((currentDate.selDay == DataCalendar[i].day)&&(currentDate.selMonth == DataCalendar[i].month)&&((currentDate.selYear) == DataCalendar[i].year)){
+                createRow.push(<BasicRow taskText={DataCalendar[i].taskText}
+                                         clickOnRow={this.clickOnRow}/>)
+            }
         }
+        this.setState({
+            viewRows: createRow
+        })
     }
 }
-
-
-function testAddTask() {
-    if (currentDate !== 0) {
-        dataFile.push(currentDate)
-        nowId += 1
-        currentDate = 0
-        memoryCell.removeAttribute('style')
-    }
-}
-
-function clearCurrentDate() {
-    currentDate = undefined
-}
-
-function dropRows() {
-    memoryRow = []
-    this.setState({
-        viewRows: memoryRow
-    })
-}
-
-
 
 
 
