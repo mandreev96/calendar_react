@@ -116,9 +116,15 @@ class Content extends React.Component{
 
 }
 
+
+
 // Variables
 var memoryCell = 0    // Memory click on cell
-var currentDate = 0,  // Current Date
+var currentDate = {
+        selDay: this.nowDay,
+        selMonth: this.nowMonth,
+        selYear: this.nowYear
+    },  // Current Date
     nowId = 0
 
 function currentCell(day, month, year) {            // Select current date after click on cell
@@ -174,6 +180,7 @@ function clickBackMonth() {
     })
     clearPointCell()
     clearCurrentDate()
+    this.clearTableTasks()
 }
 function clickNextMonth() {
     let nowMonth = this.state.month
@@ -190,6 +197,7 @@ function clickNextMonth() {
     })
     clearPointCell()
     clearCurrentDate()
+    this.clearTableTasks()
 }
 function clickNextYear() {
     let nowYear = this.state.year
@@ -199,6 +207,7 @@ function clickNextYear() {
     })
     clearPointCell()
     clearCurrentDate()
+    this.clearTableTasks()
 }
 function clickBackYear() {
     let nowYear = this.state.year
@@ -208,6 +217,7 @@ function clickBackYear() {
     })
     clearPointCell()
     clearCurrentDate()
+    this.clearTableTasks()
 }
 
 
@@ -341,6 +351,8 @@ function cellClick(event) {
 
 }
 
+
+
 function sort() {
     if (currentDate != undefined) {
         clearCreateRow()
@@ -363,7 +375,5 @@ var placeHold = 'Insert your task...'
 function changePH() {
     placeHold = (placeHold == 'Insert your task...') ?  ('Change your task...') : ('Insert your task...')
 }
-
-
 
 export default Content
