@@ -7,6 +7,7 @@
     align-items: center;
     justify-content: flex-end;
     font-size: 34px;
+    position: relative;
 }
 
 .editRow-add {
@@ -39,6 +40,23 @@ i {
 
 
 .editRow i:hover {
-    color: #806580;
+    color: #7b482a;
     transition: 0.2s;
+}
+
+.reminder {
+    width: 176px;
+    height: 28px;
+    display: none;
+    justify-content: flex-start;
+    padding: 0 8px;
+    align-items: center;
+    font-size: 18px;
+    font-family: "Lato Medium";
+    background-color: white;
+    z-index: 10;
+    position: absolute;
+    right: 104px;
+    top: 11px;
+    transition: 0.5s;
 }

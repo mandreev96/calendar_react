@@ -12,7 +12,10 @@ class TasksTable extends React.Component{
                             deleteTask={this.props.deleteTask}
                             inputBox={this.props.inputBox}
                             changeTask={this.props.changeTask}
-                            placeholder={this.props.placeholder}/>
+                            placeholder={this.props.placeholder}
+                            remind={this.props.remind}
+                            remindState={this.props.remindState}
+                />
                 <ContentRows sortFunc={this.props.sortFunc}/>
             </div>
         )

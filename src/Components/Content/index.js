@@ -40,6 +40,7 @@ class Content extends React.Component{
         this.changeTask = changeTask.bind(this)
         this.changePH = changePH.bind(this)
         this.changePHatTransit = changePHatTransit.bind(this)
+        this.reminder = reminder.bind(this)
     }
 
 
@@ -50,8 +51,7 @@ class Content extends React.Component{
         this.sortFirstWeek = parseInt(new moment().year(nameYear).month(nameMonth).day(1).format('DD'))-7;
 
 
-        this.rowWeek[0] = []
-        console.log(this.sortFirstWeek)// Составляем первую неделю
+        this.rowWeek[0] = []   // Составляем первую неделю
         if (this.sortFirstWeek == 9) {
             this.rowWeek[0] = [1]
             this.sortFirstWeek -= 7
@@ -116,6 +116,8 @@ class Content extends React.Component{
                             sortFunc={this.state.viewRows}
                             changeTask={this.changeTask}
                             placeholder={this.state.placeholder}
+                            remind={remindText}
+                            remindState={remindState}
                 />
             </div>
         )
@@ -310,13 +312,18 @@ function deleteTask() {
 
 
 function changeTask() {
-    for (let i=0; i<DataCalendar.length; i++) {
-        if (`taskNum-${DataCalendar[i].id}`==idSelRow) {
-            DataCalendar[i].taskText = this.state.valueText
+    if (this.state.valueText != '') {
+        for (let i=0; i<DataCalendar.length; i++) {
+            if (`taskNum-${DataCalendar[i].id}`==idSelRow) {
+                DataCalendar[i].taskText = this.state.valueText
+            }
         }
+        this.sort()
+        clearInputBox()
     }
-    this.sort()
-    clearInputBox()
+    else {
+
+    }
 }
 
 function clearTableTasks() {
@@ -333,7 +340,7 @@ function inputBox(event) {
 }
 
 function clearInputBox() {
-    if (inputValue.value != "") {
+    if ((inputValue.value != "")&&(inputValue != '')) {
         inputValue.value = ""
     }
 }
@@ -402,5 +409,16 @@ function changePHatTransit() {
         memoryClickRow[1] = false
     }
 }
+
+var remindText = 'Enter the task text'
+var remindState = 'none'
+
+function reminder() {
+
+}
+
+
+
+
 
 export default Content
