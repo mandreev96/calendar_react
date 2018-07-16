@@ -38,7 +38,8 @@ class Content extends React.Component{
         this.sort = sort.bind(this)
         this.clearTableTasks = clearTableTasks.bind(this)
         this.changeTask = changeTask.bind(this)
-        //this.changePH = changePH.bind(this)
+        this.changePH = changePH.bind(this)
+        this.changePHatTransit = changePHatTransit.bind(this)
     }
 
 
@@ -49,12 +50,18 @@ class Content extends React.Component{
         this.sortFirstWeek = parseInt(new moment().year(nameYear).month(nameMonth).day(1).format('DD'))-7;
 
 
-        this.rowWeek[0] = []                        // Составляем первую неделю
+        this.rowWeek[0] = []
+        console.log(this.sortFirstWeek)// Составляем первую неделю
         if (this.sortFirstWeek == 9) {
             this.rowWeek[0] = [1]
             this.sortFirstWeek -= 7
             this.startMonth -= 7
-        } else {
+        } else if (this.sortFirstWeek == 10) {
+            this.rowWeek[0] = [1, 2]
+            this.sortFirstWeek -= 7
+            this.startMonth -= 7
+        }
+        else {
             for (let k=0; k<7; k++){
                 if (this.sortFirstWeek > 1) {
                     this.sortFirstWeek -= 1
@@ -181,6 +188,7 @@ function clickBackMonth() {
     clearPointCell()
     clearCurrentDate()
     this.clearTableTasks()
+    this.changePHatTransit()
 }
 function clickNextMonth() {
     let nowMonth = this.state.month
@@ -198,6 +206,7 @@ function clickNextMonth() {
     clearPointCell()
     clearCurrentDate()
     this.clearTableTasks()
+    this.changePHatTransit()
 }
 function clickNextYear() {
     let nowYear = this.state.year
@@ -208,6 +217,7 @@ function clickNextYear() {
     clearPointCell()
     clearCurrentDate()
     this.clearTableTasks()
+    this.changePHatTransit()
 }
 function clickBackYear() {
     let nowYear = this.state.year
@@ -218,6 +228,7 @@ function clickBackYear() {
     clearPointCell()
     clearCurrentDate()
     this.clearTableTasks()
+    this.changePHatTransit()
 }
 
 
@@ -229,7 +240,7 @@ function clickBackYear() {
 
 // Operations with tasktable and rows
 
-var memoryClickRow = 0;
+var memoryClickRow = [0, false];
 var inputValue = '';
 
 function addRow() {
@@ -246,6 +257,9 @@ function addRow() {
         nowId += 1
     }
     this.sort()
+    this.setState({
+        valueText: ''
+    })
 }
 
 var idSelRow,
@@ -254,20 +268,22 @@ var idSelRow,
 function clickOnRow(event) {
     selRow = event.currentTarget
     idSelRow = selRow.id
-    if (memoryClickRow == selRow) {
-        memoryClickRow = 0
+    if (memoryClickRow[0] == selRow) {
+        memoryClickRow[0] = 0
+        memoryClickRow[1] = false
     }
     if (selRow.getAttribute('style') !== 'background-color: purple') {
         selRow.setAttribute('style','background-color: purple')
-        if (memoryClickRow != 0) {
-            memoryClickRow.removeAttribute('style')
+        if (memoryClickRow[0] != 0) {
+            memoryClickRow[0].removeAttribute('style')
         }
-        memoryClickRow = selRow
+        memoryClickRow[0] = selRow
+        memoryClickRow[1] = true
     } else {
         selRow.removeAttribute('style')
-        memoryClickRow = selRow
+        memoryClickRow[0] = selRow
     }
-    changePH()
+    this.changePH()
     this.setState({
         placeholder: placeHold
     })
@@ -276,8 +292,8 @@ function clickOnRow(event) {
 
 
 function deleteTask() {
-    if (memoryClickRow !== 0) {
-        if   (memoryClickRow.getAttribute('style') === 'background-color: purple'){
+    if (memoryClickRow[0] !== 0) {
+        if   (memoryClickRow[0].getAttribute('style') === 'background-color: purple'){
             for (let i=0; i<DataCalendar.length; i++) {
                 if ((`taskNum-${DataCalendar[i].id}`) == idSelRow){
                     DataCalendar.splice(i,1)
@@ -287,6 +303,7 @@ function deleteTask() {
         }
     }
     clearInputBox()
+    this.changePHatTransit()
 }
 
 
@@ -336,8 +353,8 @@ function cellClick(event) {
         choiceMonth: selMonth,
         choiceYear: selYear
     })
-    if (thisCell.getAttribute('style') !== 'background-color: hotpink') {
-        thisCell.setAttribute('style','background-color: hotpink')
+    if (thisCell.getAttribute('style') !== 'background-color: deeppink') {
+        thisCell.setAttribute('style','background-color: deeppink')
         if ((memoryCell != 0)) {
             clearPointCell()
         }
@@ -348,7 +365,7 @@ function cellClick(event) {
     }
     memoryCell = thisCell
     this.sort()
-
+    this.changePHatTransit()
 }
 
 
@@ -374,6 +391,16 @@ var placeHold = 'Insert your task...'
 
 function changePH() {
     placeHold = (placeHold == 'Insert your task...') ?  ('Change your task...') : ('Insert your task...')
+    this.setState({
+        placeholder: placeHold
+    })
+}
+
+function changePHatTransit() {
+    if (memoryClickRow[1] == true) {
+        this.changePH()
+        memoryClickRow[1] = false
+    }
 }
 
 export default Content

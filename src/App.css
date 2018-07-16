@@ -6,7 +6,11 @@
 
 .container {
   margin: 80px auto;
-  background-color: #fcf;
+  background: #e4f5fc; /* Old browsers */
+  background: -moz-linear-gradient(45deg, #e4f5fc 0%, #dae9ef 17%, #bfe8f9 31%, #9fd8ef 50%, #9fd8ef 50%, #9fd8ef 65%, #9fd8ef 70%, #9fd8ef 74%, #8acdea 100%);
+  background: -webkit-linear-gradient(45deg, #e4f5fc 0%,#dae9ef 17%,#bfe8f9 31%,#9fd8ef 50%,#9fd8ef 50%,#9fd8ef 65%,#9fd8ef 70%,#9fd8ef 74%,#8acdea 100%);
+  background: linear-gradient(45deg, #e4f5fc 0%,#dae9ef 17%,#bfe8f9 31%,#9fd8ef 50%,#9fd8ef 50%,#9fd8ef 65%,#9fd8ef 70%,#9fd8ef 74%,#8acdea 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e4f5fc', endColorstr='#8acdea',GradientType=1 );
   padding: 30px;
   width: 800px;
   display: flex;

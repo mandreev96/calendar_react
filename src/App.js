@@ -6,7 +6,7 @@ import Logo from './Components/Logo/index'
 class App extends Component {
   render() {
     return (
-        <div className='container'>
+        <div className='container gradient'>
             <Logo/>
             <Content/>
         </div>

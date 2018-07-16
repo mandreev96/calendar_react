@@ -1,16 +1,37 @@
 import React from 'react'
 import moment from 'moment'
 
-export default function ViewRow () {
-    function nowTime() {
-        return (
-            moment().format('Do MMMM YYYY')
+class ViewRow extends React.Component{
+    constructor(props) {
+        super(props)
+        this.state = {
+            nowTime: moment().format('LTS')
+        }
+    }
+    updateTime() {
+        this.setState({
+            nowTime: moment().format('LTS')
+        })
+    }
+    componentDidMount() {
+        this.updateId = setInterval(
+            () => this.updateTime(), 1000
         )
     }
-    return (
-        <div className='viewRow'>
-            <span>Today is {nowTime()}, {moment().format('dddd')}</span>
-        </div>
 
-    )
+    componentWillUnmount() {
+        clearInterval(this.updateId)
+    }
+
+
+    render() {
+        return(
+            <div className='viewRow'>
+                <span>Today is {moment().format('Do MMMM YYYY')}, {moment().format('dddd')}, now {this.state.nowTime}</span>
+            </div>
+        )
+    }
 }
+
+export default ViewRow
+

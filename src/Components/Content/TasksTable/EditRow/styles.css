@@ -33,4 +33,12 @@
 
 i {
     cursor: pointer;
+    transition: 0.62s;
+}
+
+
+
+.editRow i:hover {
+    color: #806580;
+    transition: 0.2s;
 }
