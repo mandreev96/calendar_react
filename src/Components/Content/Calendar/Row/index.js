@@ -4,11 +4,12 @@ import Cell from './Cell/index'
 
 class Row extends React.Component{
 
-    showCells(date) {
-        return date.map(el => {
-            return <Cell date={el} cellClickCell={this.props.cellClickRow}/>
+    showCells(data) {
+        return data.map(el => {
+            return <Cell date={el} cellClickCell={this.props.cellClickRow} key={el} dataKey={el}/>
         })
     }
+
 
     render() {
         return (

@@ -8,7 +8,7 @@ class Calendar extends React.Component{
 
     showCalendar(date){
         return date.map(el => {
-            return <Row date = {el} cellClickRow={this.props.cellClick}/>
+            return <Row date = {el} cellClickRow={this.props.cellClick} dataKey={this.props.dataKey} key={el}/>
         })
     }
 

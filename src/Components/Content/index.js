@@ -43,32 +43,24 @@ class Content extends React.Component{
         this.reminder = reminder.bind(this)
     }
 
-
     viewRow(nameMonth, nameYear) {
-        this.startMonth = parseInt(new moment().year(nameYear).month(nameMonth).day(1).format('DD'))-7;
+        this.startMonth = parseInt(new moment().year(nameYear).month(nameMonth).startOf('month').day(1).format('DD'));
         this.endMonth = parseInt(new moment().year(nameYear).month(nameMonth).endOf('month').format('DD'));
         this.rowWeek = [];
-        this.sortFirstWeek = parseInt(new moment().year(nameYear).month(nameMonth).day(1).format('DD'))-7;
+        this.sortFirstWeek = parseInt(new moment().year(nameYear).month(nameMonth).startOf('month').day(1).format('DD'));
 
 
         this.rowWeek[0] = []   // Составляем первую неделю
-        if (this.sortFirstWeek == 9) {
-            this.rowWeek[0] = [1]
-            this.sortFirstWeek -= 7
-            this.startMonth -= 7
-        } else if (this.sortFirstWeek == 10) {
-            this.rowWeek[0] = [1, 2]
-            this.sortFirstWeek -= 7
-            this.startMonth -= 7
-        }
-        else {
+
+        console.log(this.sortFirstWeek)
+
             for (let k=0; k<7; k++){
                 if (this.sortFirstWeek > 1) {
                     this.sortFirstWeek -= 1
                     this.rowWeek[0].unshift(this.sortFirstWeek)
                 }
             }
-        }
+
 
 
         for (let j=1; j<5; j++) {                         //Составляем середину
@@ -107,7 +99,9 @@ class Content extends React.Component{
                             cellClick={this.cellClick}
                             rowWeek = {this.rowWeek}
                             month = {this.state.month}
-                            year = {this.state.year}/>
+                            year = {this.state.year}
+                            dataKey={this.rowWeek}
+                            />
                 <TasksTable addRow={this.addRow}
                             deleteTask={this.deleteTask}
                             inputBox={this.inputBox}
@@ -345,6 +339,10 @@ function clearInputBox() {
     }
 }
 
+function searchNowDay() {
+
+}
+
 
 function cellClick(event) {
     let thisCell = event.currentTarget
@@ -373,6 +371,7 @@ function cellClick(event) {
     memoryCell = thisCell
     this.sort()
     this.changePHatTransit()
+    console.log(thisCell.getAttribute('data-key'))
 }
 
 
