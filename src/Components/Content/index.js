@@ -43,53 +43,43 @@ class Content extends React.Component{
         this.reminder = reminder.bind(this)
     }
 
-    viewRow(nameMonth, nameYear) {
-        this.startMonth = parseInt(new moment().year(nameYear).month(nameMonth).startOf('month').day(1).format('DD'));
-        this.endMonth = parseInt(new moment().year(nameYear).month(nameMonth).endOf('month').format('DD'));
-        this.rowWeek = [];
-        this.sortFirstWeek = parseInt(new moment().year(nameYear).month(nameMonth).startOf('month').day(1).format('DD'));
-
-
-        this.rowWeek[0] = []   // Составляем первую неделю
-
-        console.log(this.sortFirstWeek)
-
-            for (let k=0; k<7; k++){
-                if (this.sortFirstWeek > 1) {
-                    this.sortFirstWeek -= 1
-                    this.rowWeek[0].unshift(this.sortFirstWeek)
+    buildMonth(nameMonth, nameYear) {
+        let pushWeek = []
+        this.rowWeek = []
+        this.startWeek = parseInt(moment().year(nameYear).month(nameMonth).day(1).format('DD'))
+        this.endMonth = parseInt(moment().year(nameYear).month(nameMonth).endOf('month').format('DD'))
+        let saveStartWeek = this.startWeek
+        while (saveStartWeek <= this.endMonth) {
+            for (let i=0; i<7; i++){
+                if (saveStartWeek <= this.endMonth) {
+                    pushWeek.push(saveStartWeek)
+                    saveStartWeek += 1
                 }
             }
+            this.rowWeek.push(pushWeek)
+            pushWeek = []
+        }
 
+        saveStartWeek = this.startWeek-1
 
-
-        for (let j=1; j<5; j++) {                         //Составляем середину
-            this.rowWeek[j] = [];
+        while(saveStartWeek >= 1) {
             for (let i=0; i<7; i++) {
-                this.rowWeek[j].push(this.startMonth+i)
-            }
-            this.startMonth += 7
-        }
-
-        if (this.rowWeek[4][6] >= this.endMonth) {             //удаляем лишние дни на последней неделе
-            for (let k=6; k>0; k--){
-                if (this.rowWeek[4][k] > this.endMonth) {
-                    delete this.rowWeek[4][k];
+                if (saveStartWeek >= 1) {
+                    pushWeek.unshift(saveStartWeek)
+                    saveStartWeek -= 1
                 }
             }
-        } else {                                                  //добавляем дни на недостающую неделю
-            let lastDayOnLastWeek = this.rowWeek[4][6]
-            this.rowWeek[5] = []
-            for (let k=lastDayOnLastWeek; k<this.endMonth; k++) {
-                this.rowWeek[5].push(k+1)
-            }
+            this.rowWeek.unshift(pushWeek)
+            pushWeek = []
         }
 
-        return (this.rowWeek)
+
+        return this.rowWeek
+
     }
 
     render(){
-        this.viewRow(this.state.month, this.state.year)
+        this.buildMonth(this.state.month, this.state.year)
         return(
             <div className='content'>
                 <Calendar   clickBackYear={this.clickBackYear}
