@@ -24,6 +24,8 @@ class Content extends React.Component{
             placeholder: 'Insert your task...'
         }
 
+        this.sendNowDay = React.createRef()
+
         // TableTask functions
         this.addRow = addRow.bind(this)
         this.clickOnRow = clickOnRow.bind(this)
@@ -78,6 +80,39 @@ class Content extends React.Component{
 
     }
 
+   componentDidMount() {
+       // console.log(event.currentTarget)
+       //  console.log(this.sendNowDay.current)
+       let thisCell = this.sendNowDay.current
+       if (thisCell == memoryCell) {
+           memoryCell = 0
+       }
+       let selDay = parseInt(thisCell.innerText)
+       let selMonth = this.state.month
+       let selYear = this.state.year
+       currentCell(selDay, selMonth, selYear)
+       this.setState({
+           choiceDay: selDay,
+           choiceMonth: selMonth,
+           choiceYear: selYear
+       })
+       if (thisCell.getAttribute('style') !== 'background-color: deeppink') {
+           thisCell.setAttribute('style','background-color: deeppink')
+           if ((memoryCell != 0)) {
+               clearPointCell()
+           }
+       } else {
+           thisCell.removeAttribute('style')
+           clearCurrentDate()
+           this.clearTableTasks()
+       }
+       memoryCell = thisCell
+       this.sort()
+       this.changePHatTransit()
+   }
+
+
+
     render(){
         this.buildMonth(this.state.month, this.state.year)
         return(
@@ -91,6 +126,7 @@ class Content extends React.Component{
                             month = {this.state.month}
                             year = {this.state.year}
                             dataKey={this.rowWeek}
+                            sendNowDay={this.sendNowDay}
                             />
                 <TasksTable addRow={this.addRow}
                             deleteTask={this.deleteTask}
@@ -251,6 +287,9 @@ function addRow() {
 var idSelRow,
     selRow
 
+
+
+
 function clickOnRow(event) {
     selRow = event.currentTarget
     idSelRow = selRow.id
@@ -335,6 +374,8 @@ function searchNowDay() {
 
 
 function cellClick(event) {
+   // console.log(event.currentTarget)
+  //  console.log(this.sendNowDay.current)
     let thisCell = event.currentTarget
     if (thisCell == memoryCell) {
         memoryCell = 0
@@ -361,7 +402,6 @@ function cellClick(event) {
     memoryCell = thisCell
     this.sort()
     this.changePHatTransit()
-    console.log(thisCell.getAttribute('data-key'))
 }
 
 
@@ -374,7 +414,8 @@ function sort() {
                 createRow.push(<BasicRow taskText={DataCalendar[i].taskText}
                                          clickOnRow={this.clickOnRow}
                                          time={DataCalendar[i].time}
-                                         idBasicRow={DataCalendar[i].id}/>)
+                                         idBasicRow={DataCalendar[i].id}
+                                         key={DataCalendar[i].id}/>)
             }
         }
         this.setState({
@@ -404,6 +445,11 @@ var remindState = 'none'
 
 function reminder() {
 
+}
+
+function showNowDay() {
+    currentCell(this.state.choiceDay, this.state.choiceMonth, this.state.choiceYear)
+    sort()
 }
 
 
